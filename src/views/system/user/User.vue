@@ -79,9 +79,9 @@
                         <p style="width: 150px;margin-bottom: 0">{{text}}</p>
                     </a-popover>
                 </template>
-                <template slot="status"  slot-scope="text">
+                <template slot="status" slot-scope="text">
                     <a-tag v-if="text==='1'" color="cyan">有效</a-tag>
-                    <a-tag  v-else color="red">锁定</a-tag>
+                    <a-tag v-else color="red">锁定</a-tag>
                 </template>
                 <template slot="operation" slot-scope="text, record">
                     <a-icon v-hasPermission="'user:update'" type="setting" theme="twoTone" twoToneColor="#4a9ff5"
