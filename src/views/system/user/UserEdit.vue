@@ -85,7 +85,7 @@
     const formItemLayout = {
         labelCol: {span: 3},
         wrapperCol: {span: 18}
-    }
+    };
     export default {
         name: 'UserEdit',
         props: {
@@ -99,7 +99,7 @@
                 form: this.$form.createForm(this),
                 deptTreeData: [],
                 roleData: [],
-                userDept: [],
+                userDept: null,
                 userId: '',
                 loading: false
             }
@@ -114,24 +114,24 @@
                 setUser: 'account/setUser'
             }),
             onClose() {
-                this.loading = false
-                this.form.resetFields()
+                this.loading = false;
+                this.form.resetFields();
                 this.$emit('close')
             },
             setFormValues({...user}) {
-                this.userId = user.userId
-                let fields = ['username', 'email', 'status', 'ssex', 'mobile']
+                this.userId = user.userId;
+                let fields = ['username', 'email', 'status', 'ssex', 'mobile'];
                 Object.keys(user).forEach((key) => {
                     if (fields.indexOf(key) !== -1) {
-                        this.form.getFieldDecorator(key)
-                        let obj = {}
-                        obj[key] = user[key]
+                        this.form.getFieldDecorator(key);
+                        let obj = {};
+                        obj[key] = user[key];
                         this.form.setFieldsValue(obj)
                     }
-                })
+                });
                 if (user.roleId) {
-                    this.form.getFieldDecorator('roleId')
-                    let roleArr = user.roleId.split(',')
+                    this.form.getFieldDecorator('roleId');
+                    let roleArr = user.roleId.split(',');
                     this.form.setFieldsValue({'roleId': roleArr})
                 }
                 if (user.deptId) {
@@ -139,21 +139,21 @@
                 }
             },
             onDeptChange(value) {
-                this.userDept = value
+                this.userDept = value;
             },
             handleSubmit() {
                 this.form.validateFields((err, values) => {
                     if (!err) {
-                        this.loading = true
-                        let user = this.form.getFieldsValue()
-                        user.roleId = user.roleId.join(',')
-                        user.userId = this.userId
-                        user.deptId = this.userDept
+                        this.loading = true;
+                        let user = this.form.getFieldsValue();
+                        user.roleId = user.roleId.join(',');
+                        user.userId = this.userId;
+                        user.deptId = this.userDept || 0;
                         this.$put('user', {
                             ...user
                         }).then((r) => {
-                            this.loading = false
-                            this.$emit('success')
+                            this.loading = false;
+                            this.$emit('success');
                             // 如果修改用户就是当前登录用户的话，更新其state
                             if (user.username === this.currentUser.username) {
                                 this.$get(`user/${user.username}`).then((r) => {
@@ -172,7 +172,7 @@
                 if (this.userEditVisiable) {
                     this.$get('role').then((r) => {
                         this.roleData = r.data.rows
-                    })
+                    });
                     this.$get('dept').then((r) => {
                         this.deptTreeData = r.data.rows.children
                     })
