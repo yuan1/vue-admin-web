@@ -316,7 +316,7 @@
                         for (let key of that.selectedRowKeys) {
                             usernames.push(that.dataSource[key].username)
                         }
-                        that.$put('user/password/reset', {
+                        that.$get('user/password/reset', {
                             usernames: usernames.join(',')
                         }).then(() => {
                             that.$message.success('重置用户密码成功');

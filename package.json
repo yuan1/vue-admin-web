@@ -6,7 +6,10 @@
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:prod": "npm run build  && npm run build:zip && npm run build:upload",
+    "build:zip": "zip -q -r ./admin.zip ./admin",
+    "build:upload": "sh ./upload-server.sh"
   },
   "dependencies": {
     "ant-design-vue": "^1.3.9",

@@ -91,7 +91,7 @@
                     this.system.cpu.count = r[0].data.measurements[0].value;
                     this.system.cpu.usage = this.convert(r[1].data.measurements[0].value);
                     this.system.process.uptime = r[2].data.measurements[0].value;
-                    this.system.process.startTime = moment(r[3].data.measurements[0].value * 1000).format('YYYY-MM-DD HH:mm:ss')
+                    this.system.process.startTime = this.$moment(r[3].data.measurements[0].value * 1000).format('YYYY-MM-DD HH:mm:ss');
                     this.system.process.cpuUsage = this.convert(r[4].data.measurements[0].value);
                     this.loading = false
                 }).catch((r) => {

@@ -1,6 +1,7 @@
 module.exports = {
     publicPath: '',
     assetsDir: 'assets',
+    outputDir:'admin',
     devServer: {
         proxy: {
             '/api': {

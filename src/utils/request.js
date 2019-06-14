@@ -79,78 +79,26 @@ APP_REQUEST.interceptors.response.use((config) => {
 });
 
 const request = {
-    post(url, params) {
-        return APP_REQUEST.post(url, params, {
-            transformRequest: [(params) => {
-                let result = '';
-                Object.keys(params).forEach((key) => {
-                    if (!Object.is(params[key], undefined) && !Object.is(params[key], null)) {
-                        result += encodeURIComponent(key) + '=' + encodeURIComponent(params[key]) + '&'
-                    }
-                });
-                return result
-            }],
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        })
+    post(url, data) {
+        return APP_REQUEST.post(url, data)
     },
-    put(url, params) {
-        return APP_REQUEST.put(url, params, {
-            transformRequest: [(params) => {
-                let result = '';
-                Object.keys(params).forEach((key) => {
-                    if (!Object.is(params[key], undefined) && !Object.is(params[key], null)) {
-                        result += encodeURIComponent(key) + '=' + encodeURIComponent(params[key]) + '&'
-                    }
-                });
-                return result
-            }],
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        })
+    put(url, data) {
+        return APP_REQUEST.put(url, data)
     },
     get(url, params) {
-        let _params;
-        if (Object.is(params, undefined)) {
-            _params = ''
-        } else {
-            _params = '?';
-            for (let key in params) {
-                if (params.hasOwnProperty(key) && params[key] !== null) {
-                    _params += `${key}=${params[key]}&`
-                }
-            }
-        }
-        return APP_REQUEST.get(`${url}${_params}`)
+        return APP_REQUEST.get(url, {
+            params: params
+        })
     },
     delete(url, params) {
-        let _params;
-        if (Object.is(params, undefined)) {
-            _params = ''
-        } else {
-            _params = '?';
-            for (let key in params) {
-                if (params.hasOwnProperty(key) && params[key] !== null) {
-                    _params += `${key}=${params[key]}&`
-                }
-            }
-        }
-        return APP_REQUEST.delete(`${url}${_params}`)
+        return APP_REQUEST.delete(url, {
+            params: params
+        })
     },
     export(url, params = {}) {
         message.loading('导出数据中');
-        return APP_REQUEST.post(url, params, {
-            transformRequest: [(params) => {
-                let result = '';
-                Object.keys(params).forEach((key) => {
-                    if (!Object.is(params[key], undefined) && !Object.is(params[key], null)) {
-                        result += encodeURIComponent(key) + '=' + encodeURIComponent(params[key]) + '&'
-                    }
-                });
-                return result
-            }],
+        return APP_REQUEST.get(url, {
+            params: params,
             responseType: 'blob'
         }).then((r) => {
             const content = r.data;
@@ -173,18 +121,9 @@ const request = {
             message.error('导出失败')
         })
     },
-    download(url, params, filename) {
-        message.loading('文件传输中')
-        return APP_REQUEST.post(url, params, {
-            transformRequest: [(params) => {
-                let result = '';
-                Object.keys(params).forEach((key) => {
-                    if (!Object.is(params[key], undefined) && !Object.is(params[key], null)) {
-                        result += encodeURIComponent(key) + '=' + encodeURIComponent(params[key]) + '&'
-                    }
-                });
-                return result
-            }],
+    download(url, data, filename) {
+        message.loading('文件传输中');
+        return APP_REQUEST.post(url, data, {
             responseType: 'blob'
         }).then((r) => {
             const content = r.data;
@@ -206,13 +145,13 @@ const request = {
             message.error('下载失败')
         })
     },
-    upload(url, params) {
-        return APP_REQUEST.post(url, params, {
+    upload(url, data) {
+        return APP_REQUEST.post(url, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         })
     }
-}
+};
 
 export default request
