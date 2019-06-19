@@ -302,6 +302,9 @@
             },
             fetch(params = {}) {
                 this.loading = true;
+                if(params.type && params.type.length>0){
+                    params.type = params.type[0];
+                }
                 this.$get('menu', {
                     ...params
                 }).then((r) => {

@@ -70,6 +70,7 @@
                      :loading="loading"
                      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                      :scroll="{ x: 900 }"
+                     rowKey="userId"
                      @change="handleTableChange">
                 <template slot="email" slot-scope="text">
                     <a-popover placement="topLeft">
@@ -286,11 +287,7 @@
                     content: '当您点击确定按钮后，这些记录将会被彻底删除',
                     centered: true,
                     onOk() {
-                        let userIds = [];
-                        for (let key of that.selectedRowKeys) {
-                            userIds.push(that.dataSource[key].userId)
-                        }
-                        that.$delete('user/' + userIds.join(',')).then(() => {
+                        that.$delete('user/' + that.selectedRowKeys.join(',')).then(() => {
                             that.$message.success('删除成功');
                             that.selectedRowKeys = [];
                             that.search()
@@ -312,12 +309,8 @@
                     content: '当您点击确定按钮后，这些用户的密码将会重置为1234qwer',
                     centered: true,
                     onOk() {
-                        let usernames = [];
-                        for (let key of that.selectedRowKeys) {
-                            usernames.push(that.dataSource[key].username)
-                        }
                         that.$get('user/password/reset', {
-                            usernames: usernames.join(',')
+                            ids: that.selectedRowKeys.join(',')
                         }).then(() => {
                             that.$message.success('重置用户密码成功');
                             that.selectedRowKeys = []
@@ -384,9 +377,8 @@
             handleTableChange(pagination, filters, sorter) {
                 // 将这三个参数赋值给Vue data，用于后续使用
                 this.paginationInfo = pagination;
-                this.filteredInfo = filters;
+                this.filteredInfo =  {...filters};
                 this.sortedInfo = sorter;
-
                 this.userInfo.visiable = false;
                 this.fetch({
                     sortField: sorter.field,
@@ -408,6 +400,12 @@
                     // 如果分页信息为空，则设置为默认值
                     params.pageSize = this.pagination.defaultPageSize;
                     params.pageNum = this.pagination.defaultCurrent
+                }
+                if(params.ssex && params.ssex.length>0){
+                    params.ssex = params.ssex[0];
+                }
+                if(params.status && params.status.length>0){
+                    params.status = params.status[0];
                 }
                 this.$get('user', {
                     ...params
